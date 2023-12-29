@@ -1,5 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 
 # Create your models here.
 class UserManager(BaseUserManager):
@@ -7,7 +9,7 @@ class UserManager(BaseUserManager):
         if not email:
             raise ValueError('User must have an email address')
         elif not username:
-            raise ValueError('user must have an username')
+            raise ValueError('user must have a   username')
         user = self.model(
             email = self.normalize_email(email),
             username = username,
@@ -29,7 +31,8 @@ class UserManager(BaseUserManager):
         user.is_active = True
         user.is_staff = True
         user.is_superadmin = True
-        user.save(using = self._db)
+        user.save(using = self._db) 
+        return user
 
 
 class User(AbstractBaseUser):
